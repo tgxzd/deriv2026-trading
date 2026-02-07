@@ -14,7 +14,7 @@ datasource db {
 }
 
 model Wallet {
-  id        Int      @unique @id @default(autoincrement())
+  id        Int      @id @unique @default(autoincrement())
   userId    Int      @unique
   balance   Float
   createdAt DateTime @default(now())
@@ -24,17 +24,31 @@ model Wallet {
   @@map("wallet")
 }
 
+model BuyAndSellHistory {
+  id        Int      @id @unique @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  symbol    String
+  quantity  Float
+  price     Float
+  total     Float
+  type      String
+  status    String
+  createdAt DateTime @default(now())
+}
+
 model User {
-  id            Int       @unique @id @default(autoincrement())
-  name          String
-  email         String
-  emailVerified Boolean   @default(false)
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  sessions      Session[]
-  accounts      Account[]
-  wallet        Wallet?
+  id                  Int                 @id @unique @default(autoincrement())
+  name                String
+  email               String
+  emailVerified       Boolean             @default(false)
+  image               String?
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  sessions            Session[]
+  accounts            Account[]
+  wallet              Wallet?
+  buyAndSellHistories BuyAndSellHistory[]
 
   @@unique([email])
   @@map("user")
